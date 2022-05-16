@@ -1,7 +1,7 @@
 package com.sry.springboot.myblog.controller.admin;
 
 import com.sry.springboot.myblog.entity.AdminUser;
-import com.sry.springboot.myblog.service.AdminUserService;
+import com.sry.springboot.myblog.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +20,16 @@ public class AdminController {
 
     @Resource
     private AdminUserService adminUserService;
+    @Resource
+    private BlogService blogService;
+    @Resource
+    private CategoryService categoryService;
+    @Resource
+    private LinkService linkService;
+    @Resource
+    private TagService tagService;
+    @Resource
+    private CommentService commentService;
 
     /**
      * 登录页面
@@ -77,8 +87,11 @@ public class AdminController {
     @GetMapping({"","/","/index","/index.html"})
     public String index(HttpServletRequest request){
         request.setAttribute("path","index");
-
-
+        request.setAttribute("categoryCount", categoryService.getTotalCategories());
+        request.setAttribute("blogCount",blogService.getTotalBlogs());
+        request.setAttribute("linkCount",linkService.getTotalLinks());
+        request.setAttribute("tagCount",tagService.getTotalTags());
+        request.setAttribute("commentCount",commentService.getTotalComment());
         return "admin/index";
     }
 
