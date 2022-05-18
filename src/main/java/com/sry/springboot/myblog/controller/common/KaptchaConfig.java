@@ -1,9 +1,8 @@
-package com.sry.springboot.myblog.common;
+package com.sry.springboot.myblog.controller.common;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;

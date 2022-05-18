@@ -37,8 +37,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
+    /**
+     * 保存博客分类
+     *
+     * @param categoryName
+     * @param categoryIcon
+     * @return
+     */
     @Override
     public Boolean saveCategory(String categoryName, String categoryIcon) {
+        //根据名称获取博客分类，获取到了，就不保存，没获取到，就保存
         BlogCategory temp = blogCategoryMapper.selectByCategoryName(categoryName);
         if (temp == null) {
             BlogCategory blogCategory = new BlogCategory();

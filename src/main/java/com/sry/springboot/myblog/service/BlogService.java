@@ -1,8 +1,12 @@
 package com.sry.springboot.myblog.service;
 
+import com.sry.springboot.myblog.controller.vo.BlogDetailVO;
+import com.sry.springboot.myblog.controller.vo.SimpleBlogListVO;
 import com.sry.springboot.myblog.entity.Blog;
 import com.sry.springboot.myblog.util.PageQueryUtil;
 import com.sry.springboot.myblog.util.PageResult;
+
+import java.util.List;
 
 public interface BlogService {
 
@@ -38,7 +42,50 @@ public interface BlogService {
      */
     PageResult getBlogsForIndexPage(int page);
 
+    /**
+     * 首页侧边栏数据列表
+     * 0-点击最多 1-最新发布
+     *
+     * @param type
+     * @return
+     */
+    List<SimpleBlogListVO> getBlogListForIndexPage(int type);
+    /**
+     * 文章详情
+     *
+     * @param blogId
+     * @return
+     */
+    BlogDetailVO getBlogDetail(Long blogId);
 
+    /**
+     * 根据标签获取文章列表
+     *
+     * @param tagName
+     * @param page
+     * @return
+     */
+    PageResult getBlogsPageByTag(String tagName, int page);
+
+    /**
+     * 根据分类获取文章列表
+     *
+     * @param categoryId
+     * @param page
+     * @return
+     */
+    PageResult getBlogsPageByCategory(String categoryId, int page);
+
+    /**
+     * 根据搜索获取文章列表
+     *
+     * @param keyword
+     * @param page
+     * @return
+     */
+    PageResult getBlogsPageBySearch(String keyword, int page);
+
+    BlogDetailVO getBlogDetailBySubUrl(String subUrl);
 
 
 }

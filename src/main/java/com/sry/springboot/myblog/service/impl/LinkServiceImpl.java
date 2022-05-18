@@ -9,18 +9,22 @@ import jdk.internal.dynalink.linker.LinkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class LinkServiceImpl implements LinkService {
 
-    @Autowired
+    @Resource
     private BlogLinkMapper blogLinkMapper;
 
     @Override
     public PageResult getBlogLinkPage(PageQueryUtil pageUtil) {
-        return null;
+        List<BlogLink> linkList = blogLinkMapper.findLinkList(pageUtil);
+        int total = blogLinkMapper.getTotalLinks(pageUtil);
+        PageResult pageResult = new PageResult(linkList, total, pageUtil.getLimit(), pageUtil.getPage());
+        return pageResult;
     }
 
     @Override
@@ -30,22 +34,22 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     public Boolean saveLink(BlogLink link) {
-        return null;
+        return  blogLinkMapper.insertSelective(link) > 0;
     }
 
     @Override
     public BlogLink selectById(Integer id) {
-        return null;
+        return blogLinkMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public Boolean updateLink(BlogLink tempLink) {
-        return null;
+        return blogLinkMapper.updateByPrimaryKeySelective(tempLink) > 0;
     }
 
     @Override
     public Boolean deleteBatch(Integer[] ids) {
-        return null;
+        return blogLinkMapper.deleteBatch(ids)>0;
     }
 
     @Override
