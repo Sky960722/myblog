@@ -128,6 +128,8 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/profile/name")
+    @ResponseBody
     public String nameUpdate(HttpServletRequest request,
                              @RequestParam("loginUserName") String loginUserName,
                              @RequestParam("nickName") String nickName) {
@@ -147,6 +149,6 @@ public class AdminController {
         request.getSession().removeAttribute("loginUserId");
         request.getSession().removeAttribute("loginUser");
         request.getSession().removeAttribute("errorMsg");
-        return "admin/lgoin";
+        return "admin/login";
     }
 }
