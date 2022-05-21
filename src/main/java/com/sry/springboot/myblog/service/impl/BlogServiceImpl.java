@@ -324,6 +324,7 @@ public class BlogServiceImpl implements BlogService {
             blogMapper.updateByPrimaryKey(blog);
             BlogDetailVO blogDetailVO = new BlogDetailVO();
             BeanUtils.copyProperties(blog, blogDetailVO);
+            //md格式转换
             blogDetailVO.setBlogContent(MarkDownUtil.mdToHtml(blogDetailVO.getBlogContent()));
             BlogCategory blogCategory = categoryMapper.selectByPrimaryKey(blog.getBlogCategoryId());
             if (blogCategory == null) {

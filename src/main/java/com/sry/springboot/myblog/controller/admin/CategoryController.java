@@ -20,6 +20,11 @@ public class CategoryController {
     @Resource
     private CategoryService categoryService;
 
+    /**
+     * 分类管理页面
+     * @param request
+     * @return
+     */
     @GetMapping("/categories")
     public String categoryPage(HttpServletRequest request) {
         request.setAttribute("path", "categories");

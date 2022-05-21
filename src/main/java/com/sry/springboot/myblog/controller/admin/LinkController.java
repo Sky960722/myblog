@@ -19,6 +19,11 @@ public class LinkController {
     @Resource
     private LinkService linkService;
 
+    /**
+     * 链接页面
+     * @param request
+     * @return
+     */
     @GetMapping("/links")
     public String linkPage(HttpServletRequest request) {
         request.setAttribute("path", "links");
@@ -41,6 +46,15 @@ public class LinkController {
         return ResultGenerator.genSuccessResult(linkService.getBlogLinkPage(pageUtil));
     }
 
+    /**
+     * 链接添加
+     * @param linkType
+     * @param linkName
+     * @param linkUrl
+     * @param linkRank
+     * @param linkDescription
+     * @return
+     */
     @PostMapping("/links/save")
     @ResponseBody
     public Result save(@RequestParam("linkType") Integer linkType,
@@ -61,19 +75,11 @@ public class LinkController {
         }
     }
 
-    @PostMapping("/links/delete")
-    @ResponseBody
-    public Result delete(@RequestBody Integer[] ids) {
-        if (ids.length < 1) {
-            return ResultGenerator.genFailResult("参数异常");
-        }
-        if (linkService.deleteBatch(ids)) {
-            return ResultGenerator.genSuccessResult();
-        } else {
-            return ResultGenerator.genFailResult("删除失败");
-        }
-    }
-
+    /**
+     * 链接详情
+     * @param id
+     * @return
+     */
     @GetMapping("/links/info/{id}")
     @ResponseBody
     public Result info(@PathVariable("id") Integer id) {
@@ -81,6 +87,16 @@ public class LinkController {
         return ResultGenerator.genSuccessResult(link);
     }
 
+    /**
+     * 友链修改
+     * @param linkId
+     * @param linkType
+     * @param linkName
+     * @param linkUrl
+     * @param linkRank
+     * @param linkDescription
+     * @return
+     */
     @PostMapping("/links/update")
     @ResponseBody
     public Result update(@RequestParam("linkId") Integer linkId,
@@ -102,5 +118,23 @@ public class LinkController {
         tempLink.setLinkRank(linkRank);
         tempLink.setLinkDescription(linkDescription);
         return ResultGenerator.genSuccessResult(linkService.updateLink(tempLink));
+    }
+
+    /**
+     * 友链删除
+     * @param ids
+     * @return
+     */
+    @PostMapping("/links/delete")
+    @ResponseBody
+    public Result delete(@RequestBody Integer[] ids) {
+        if (ids.length < 1) {
+            return ResultGenerator.genFailResult("参数异常");
+        }
+        if (linkService.deleteBatch(ids)) {
+            return ResultGenerator.genSuccessResult();
+        } else {
+            return ResultGenerator.genFailResult("删除失败");
+        }
     }
 }

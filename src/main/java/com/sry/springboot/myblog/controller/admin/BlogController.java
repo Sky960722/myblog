@@ -38,6 +38,21 @@ public class BlogController {
     private CategoryService categoryService;
 
     /**
+     *接受前端页数，条数，返回列表数据
+     * @param params
+     * @return
+     */
+    @GetMapping("/blogs/list")
+    @ResponseBody
+    public Result list(@RequestParam Map<String, Object> params) {
+        if (StringUtils.isEmpty(params.get("page")) || StringUtils.isEmpty(params.get("limit"))) {
+            return ResultGenerator.genFailResult("参数异常！");
+        }
+        PageQueryUtil pageUtil = new PageQueryUtil(params);
+        return ResultGenerator.genSuccessResult(blogService.getBlogsPage(pageUtil));
+    }
+
+    /**
      * 博客管理页面
      *
      * @param request
@@ -47,16 +62,6 @@ public class BlogController {
     public String list(HttpServletRequest request) {
         request.setAttribute("path", "blogs");
         return "admin/blog";
-    }
-
-    @GetMapping("/blogs/list")
-    @ResponseBody
-    public Result list(@RequestParam Map<String, Object> params) {
-        if (StringUtils.isEmpty(params.get("page")) || StringUtils.isEmpty(params.get("limit"))) {
-            return ResultGenerator.genFailResult("参数异常！");
-        }
-        PageQueryUtil pageUtil = new PageQueryUtil(params);
-        return ResultGenerator.genSuccessResult(blogService.getBlogsPage(pageUtil));
     }
 
     /**
@@ -73,6 +78,12 @@ public class BlogController {
         return "admin/edit";
     }
 
+    /**
+     * 修改博客页面
+     * @param request
+     * @param blogId
+     * @return
+     */
     @GetMapping("/blogs/edit/{blogId}")
     public String edit(HttpServletRequest request, @PathVariable("blogId") Long blogId) {
         request.setAttribute("path", "edit");
@@ -194,11 +205,16 @@ public class BlogController {
         } else {
             return ResultGenerator.genFailResult(updateBlogResult);
         }
-
-
     }
 
-
+    /**
+     * 下载编辑内容图片
+     * @param request
+     * @param response
+     * @param file
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     @PostMapping("/blogs/md/uploadfile")
     public void uploadFileByEditormd(HttpServletRequest request,
                                      HttpServletResponse response,
@@ -232,6 +248,11 @@ public class BlogController {
         }
     }
 
+    /**
+     * 删除博客
+     * @param ids
+     * @return
+     */
     @PostMapping("/blogs/delete")
     @ResponseBody
     public Result delete(@RequestBody Integer[] ids) {

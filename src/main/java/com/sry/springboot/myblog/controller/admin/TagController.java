@@ -20,12 +20,22 @@ public class TagController {
     @Resource
     private TagService tagService;
 
+    /**
+     * 标签页面
+     * @param request
+     * @return
+     */
     @GetMapping("/tags")
     public String tagPage(HttpServletRequest request) {
         request.setAttribute("path", "tags");
         return "admin/tag";
     }
 
+    /**
+     * 标签接口
+     * @param params
+     * @return
+     */
     @GetMapping("/tags/list")
     @ResponseBody
     public Result list(@RequestParam Map<String, Object> params) {
@@ -36,6 +46,11 @@ public class TagController {
         return ResultGenerator.genSuccessResult(tagService.getBlogTagPage(pageUtil));
     }
 
+    /**
+     * 标签保存
+     * @param tagName
+     * @return
+     */
     @PostMapping("/tags/save")
     @ResponseBody
     public Result save(@RequestParam("tagName") String tagName) {
@@ -49,6 +64,11 @@ public class TagController {
         }
     }
 
+    /**
+     * 标签删除
+     * @param ids
+     * @return
+     */
     @PostMapping("/tags/delete")
     @ResponseBody
     public Result delete(@RequestBody Integer[] ids) {
