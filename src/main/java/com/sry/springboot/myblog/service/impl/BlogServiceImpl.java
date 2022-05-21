@@ -21,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.sql.Blob;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -190,6 +191,12 @@ public class BlogServiceImpl implements BlogService {
         return "修改失败";
     }
 
+    /**
+     * 获取首页文章列表
+     *
+     * @param page
+     * @return
+     */
     @Override
     public PageResult getBlogsForIndexPage(int page) {
         Map params = new HashMap();
@@ -342,17 +349,30 @@ public class BlogServiceImpl implements BlogService {
         return null;
     }
 
+    /**
+     * 数据抽取
+     *
+     * @param blogList
+     * @return
+     */
     private List<BlogListVO> getBlogListVOsByBlogs(List<Blog> blogList) {
-        List<BlogListVO> blogListVOS = new ArrayList<>();
+        ArrayList<BlogListVO> blogListVOS = new ArrayList<>();
         if (!CollectionUtils.isEmpty(blogList)) {
-            List<Integer> categoryIds = blogList.stream().map(Blog::getBlogCategoryId).collect(Collectors.toList());
+            //1.获取blogList的里所有的categoryId
+            List<Integer> categoryIds =
+                    blogList.stream().map(blog -> blog.getBlogCategoryId()).collect(Collectors.toList());
+            //声明一个categoryMap，存储categoryId和categoryIcon
             Map<Integer, String> blogCategoryMap = new HashMap<>();
             if (!CollectionUtils.isEmpty(categoryIds)) {
-                List<BlogCategory> blogCategories = categoryMapper.selectByCategoryIds(categoryIds);
-                if (!CollectionUtils.isEmpty(blogCategories)) {
-                    blogCategoryMap = blogCategories.stream().collect(Collectors.toMap(BlogCategory::getCategoryId, BlogCategory::getCategoryIcon, (key1, key2) -> key2));
+                //2.根据获得的categoryIds获取categoryList
+                List<BlogCategory> blogCategoryList = categoryMapper.selectByCategoryIds(categoryIds);
+                if (!CollectionUtils.isEmpty(blogCategoryList)) {
+                //3.提取categoryList的id和icon
+                    blogCategoryMap =
+                            blogCategoryList.stream().collect(Collectors.toMap(blogCategory -> blogCategory.getCategoryId(), blogCategory -> blogCategory.getCategoryIcon(), (key1, key2) -> key2));
                 }
             }
+            //4.循环blogList的blog，把blog和categoryIcon封装到blogListVO中
             for (Blog blog : blogList) {
                 BlogListVO blogListVO = new BlogListVO();
                 BeanUtils.copyProperties(blog, blogListVO);
@@ -361,7 +381,7 @@ public class BlogServiceImpl implements BlogService {
                 } else {
                     blogListVO.setBlogCategoryId(0);
                     blogListVO.setBlogCategoryName("默认分类");
-                    blogListVO.setBlogCategoryIcon("/admin/dist/img/category/00.png");
+                    blogListVO.setBlogCategoryIcon("/admin/dist/img/category/1.png");
                 }
                 blogListVOS.add(blogListVO);
             }
